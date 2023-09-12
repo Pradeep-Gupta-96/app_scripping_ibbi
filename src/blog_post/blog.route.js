@@ -34,10 +34,10 @@ router.get('/createTodoTable',authMiddleware, createTodoTable);
 router.post('/insertTodo', authMiddleware, upload.single('image'), insertTodo);
 
 // Get all Todos
-router.get('/getAllTodo', authMiddleware, getAllTodo);
+router.get('/getAllTodo', getAllTodo);
 
 // Get a Todo by ID
-router.get('/getTodoById/:id', authMiddleware, getTodoById);
+router.get('/getTodoById/:id', getTodoById);
 
 // Update a Todo by ID
 router.put('/updateTodoById/:id', authMiddleware, upload.single('image'), updateTodoById);
