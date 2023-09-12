@@ -14,7 +14,8 @@ import {
     public_announcement,
     resolution_plans,
     summary_of_outcomes,
-    supreme_court
+    supreme_court,
+    whats_new
 } from "./controllers.js";
 
 export const routes = express.Router()
@@ -34,3 +35,5 @@ routes.get('/drts', drts)
 routes.get('/ibbi', ibbi)
 routes.get('/ipa_rvo', ipa_rvo)
 routes.get('/other_courts', other_courts)
+routes.get('/whats_new',whats_new)
+

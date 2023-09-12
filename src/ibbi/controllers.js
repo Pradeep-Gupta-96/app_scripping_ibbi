@@ -885,3 +885,65 @@ export const other_courts= async (req, res) => {
         res.status(500).json({ message: "An Error Occurred on the server side" });
     }
 };
+
+
+export const whats_new = async (req, res) => {
+    try {
+        const baseUrl = 'https://ibbi.gov.in/en';
+
+        const requestedPage = req.query.page || 1; // Get the requested page number from query parameter
+
+        async function scrapeDataFromPage(pageNumber) {
+            const url = `${baseUrl}?page=${pageNumber}`;
+
+            try {
+                const response = await axios.get(url);
+                const html = response.data;
+                const $ = cheerio.load(html);
+
+                const announcements = [];
+
+                $('div.table-responsive table tbody tr').each((index, rowElement) => {
+                    const columns = $(rowElement).find('td');
+                    const typeOfPA = $(columns[0]).text().trim();
+                    const dateOfAnnouncement = $(columns[1]).text().trim();
+                    const lastDateOfSubmission = $(columns[2]).text().trim();
+                    const corporateDebtor = $(columns[3]).text().trim();
+                    const nameOfApplicant = $(columns[4]).text().trim();
+                    const nameOfIP = $(columns[5]).text().trim();
+                    const pdfLinkElement = $(columns[6]).find('a');
+                    const onclickValue = pdfLinkElement.attr('onclick');
+
+                    // Extract the URL from the onclick attribute using a regular expression
+                    const pdfUrlMatch = onclickValue.match(/'([^']+)'/);
+                    const pdfLink = pdfUrlMatch ? pdfUrlMatch[1] : null;
+
+                    announcements.push({
+                        typeOfPA,
+                        dateOfAnnouncement,
+                        lastDateOfSubmission,
+                        corporateDebtor,
+                        nameOfApplicant,
+                        nameOfIP,
+                        pdfLink
+                    });
+                });
+
+                return announcements;
+            } catch (error) {
+                console.error('Error fetching web page:', error);
+                return [];
+            }
+        }
+
+        // Scrape data and filter for the requested page
+        const scrapedAnnouncements = await scrapeDataFromPage(requestedPage);
+
+        // Respond with the paginated announcements
+        res.status(200).json(scrapedAnnouncements);
+
+    } catch (error) {
+        console.error('An error occurred on the server side:', error);
+        res.status(500).json({ message: "An Error Occurred on the server side" });
+    }
+};
