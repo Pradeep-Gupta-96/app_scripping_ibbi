@@ -890,6 +890,7 @@ export const other_courts = async (req, res) => {
 export const whats_new = async (req, res) => {
     try {
         const baseUrl = 'https://ibbi.gov.in/en';
+        const urlforpdf=`https://ibbi.gov.in`
 
         const requestedPage = req.query.page || 1; // Get the requested page number from query parameter
 
@@ -913,7 +914,7 @@ export const whats_new = async (req, res) => {
                     text = text.replace(date, '').trim();
         
                     // Create a clickable link
-                    const clickablePdfLink = `<a href="${baseUrl}${pdfLink}" target="_blank">${text}</a>`;
+                    const clickablePdfLink = `${urlforpdf}${pdfLink}`;
         
                     announcements.push({
                         date,
