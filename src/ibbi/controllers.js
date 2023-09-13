@@ -393,13 +393,13 @@ export const supreme_court = async (req, res) => {
                     const pdfLink = pdfUrlMatch ? pdfUrlMatch[1] : null;
 
                     const Orders_Remarks = $(columns[2]).text().trim();
-             
+
                     announcements.push({
                         Orders_Date,
                         Subject,
                         pdfLink,
                         Orders_Remarks,
-                      
+
                     });
                 });
 
@@ -451,13 +451,13 @@ export const high_court = async (req, res) => {
                     const pdfLink = pdfUrlMatch ? pdfUrlMatch[1] : null;
 
                     const Orders_Remarks = $(columns[2]).text().trim();
-             
+
                     announcements.push({
                         Orders_Date,
                         Subject,
                         pdfLink,
                         Orders_Remarks,
-                      
+
                     });
                 });
 
@@ -509,13 +509,13 @@ export const nclat = async (req, res) => {
                     const pdfLink = pdfUrlMatch ? pdfUrlMatch[1] : null;
 
                     const Orders_Remarks = $(columns[2]).text().trim();
-             
+
                     announcements.push({
                         Orders_Date,
                         Subject,
                         pdfLink,
                         Orders_Remarks,
-                      
+
                     });
                 });
 
@@ -567,13 +567,13 @@ export const nclt = async (req, res) => {
                     const pdfLink = pdfUrlMatch ? pdfUrlMatch[1] : null;
 
                     const Orders_Remarks = $(columns[2]).text().trim();
-             
+
                     announcements.push({
                         Orders_Date,
                         Subject,
                         pdfLink,
                         Orders_Remarks,
-                      
+
                     });
                 });
 
@@ -625,13 +625,13 @@ export const drat = async (req, res) => {
                     const pdfLink = pdfUrlMatch ? pdfUrlMatch[1] : null;
 
                     const Orders_Remarks = $(columns[2]).text().trim();
-             
+
                     announcements.push({
                         Orders_Date,
                         Subject,
                         pdfLink,
                         Orders_Remarks,
-                      
+
                     });
                 });
 
@@ -683,13 +683,13 @@ export const drts = async (req, res) => {
                     const pdfLink = pdfUrlMatch ? pdfUrlMatch[1] : null;
 
                     const Orders_Remarks = $(columns[2]).text().trim();
-             
+
                     announcements.push({
                         Orders_Date,
                         Subject,
                         pdfLink,
                         Orders_Remarks,
-                      
+
                     });
                 });
 
@@ -741,13 +741,13 @@ export const ibbi = async (req, res) => {
                     const pdfLink = pdfUrlMatch ? pdfUrlMatch[1] : null;
 
                     const Orders_Remarks = $(columns[2]).text().trim();
-             
+
                     announcements.push({
                         Orders_Date,
                         Subject,
                         pdfLink,
                         Orders_Remarks,
-                      
+
                     });
                 });
 
@@ -799,13 +799,13 @@ export const ipa_rvo = async (req, res) => {
                     const pdfLink = pdfUrlMatch ? pdfUrlMatch[1] : null;
 
                     const Orders_Remarks = $(columns[2]).text().trim();
-             
+
                     announcements.push({
                         Orders_Date,
                         Subject,
                         pdfLink,
                         Orders_Remarks,
-                      
+
                     });
                 });
 
@@ -828,7 +828,7 @@ export const ipa_rvo = async (req, res) => {
     }
 };
 
-export const other_courts= async (req, res) => {
+export const other_courts = async (req, res) => {
     try {
         const baseUrl = 'https://ibbi.gov.in/en/orders/other-courts';
 
@@ -857,13 +857,13 @@ export const other_courts= async (req, res) => {
                     const pdfLink = pdfUrlMatch ? pdfUrlMatch[1] : null;
 
                     const Orders_Remarks = $(columns[2]).text().trim();
-             
+
                     announcements.push({
                         Orders_Date,
                         Subject,
                         pdfLink,
                         Orders_Remarks,
-                      
+
                     });
                 });
 
@@ -903,31 +903,25 @@ export const whats_new = async (req, res) => {
 
                 const announcements = [];
 
-                $('div.table-responsive table tbody tr').each((index, rowElement) => {
-                    const columns = $(rowElement).find('td');
-                    const typeOfPA = $(columns[0]).text().trim();
-                    const dateOfAnnouncement = $(columns[1]).text().trim();
-                    const lastDateOfSubmission = $(columns[2]).text().trim();
-                    const corporateDebtor = $(columns[3]).text().trim();
-                    const nameOfApplicant = $(columns[4]).text().trim();
-                    const nameOfIP = $(columns[5]).text().trim();
-                    const pdfLinkElement = $(columns[6]).find('a');
-                    const onclickValue = pdfLinkElement.attr('onclick');
-
-                    // Extract the URL from the onclick attribute using a regular expression
-                    const pdfUrlMatch = onclickValue.match(/'([^']+)'/);
-                    const pdfLink = pdfUrlMatch ? pdfUrlMatch[1] : null;
-
+                $('div#newsTikker0 ul.activityTicker li').each((index, rowElement) => {
+                    const $row = $(rowElement);
+                    const date = $row.find('b').text(); // Extract the date
+                    const pdfLink = $row.find('a').attr('href'); // Extract the PDF link
+                    let text = $row.find('a').text().replace(/\s+/g, ' ').trim(); // Clean up and extract the text content
+        
+                    // Remove the date from the text
+                    text = text.replace(date, '').trim();
+        
+                    // Create a clickable link
+                    const clickablePdfLink = `<a href="${baseUrl}${pdfLink}" target="_blank">${text}</a>`;
+        
                     announcements.push({
-                        typeOfPA,
-                        dateOfAnnouncement,
-                        lastDateOfSubmission,
-                        corporateDebtor,
-                        nameOfApplicant,
-                        nameOfIP,
-                        pdfLink
+                        date,
+                        text,
+                        pdfLink: clickablePdfLink,
                     });
                 });
+        
 
                 return announcements;
             } catch (error) {
