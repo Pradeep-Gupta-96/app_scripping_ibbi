@@ -29,7 +29,7 @@ app.use('/uploads', express.static('src/blog_post/uploads'));
 
 
 app.get('/', (req, res) => {
-    res.send("vighnharth shree ganesha deva")
+    res.send("your api is ruuning ....")
 })
 
 
