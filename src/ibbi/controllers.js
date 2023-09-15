@@ -90,14 +90,32 @@ export const claims = async (req, res) => {
                     const Under_Process = $(columns[2]).text().trim();
                     const Latest_Claim_As_On_Date = $(columns[3]).text().trim();
                     const View_Details = $(columns[4]).text().trim();
-                    // Add more fields as needed
+                    // Find the <a> element within the fourth column
+                    const viewDetailsAnchor = $(columns[4]).find('a');
+
+                    // Extract the href attribute value
+                    const href = viewDetailsAnchor.attr('href');
+
+                    // Use a regular expression to extract the number from the href
+                    const match = href.match(/\/(\d+)$/);
+
+                    let claimNumber = null; // Initialize claimNumber as null
+
+                    // Check if a match was found
+                    if (match) {
+                       claimNumber = match[1]; // The captured number  
+                    } else {
+                        console.log('Claim number not found');
+                    }
+
 
                     claimsData.push({
                         CorporateDebtor,
                         Name_of_IRP_RP_Liquidator,
                         Under_Process,
                         Latest_Claim_As_On_Date,
-                        View_Details
+                        View_Details,
+                        claimNumber // Add the claimNumber to the object
                         // Add more fields here
                     });
                 });
@@ -120,6 +138,64 @@ export const claims = async (req, res) => {
         res.status(500).json({ message: "An Error Occurred on the server side" });
     }
 };
+
+export const viewclaims = async (req, res) => {
+    try {
+        const id = req.params.id
+        const baseUrl = `https://ibbi.gov.in/en/claims/front-claim-details/${id}`;
+
+        async function scrapeDataFromPage() {
+            const url = `${baseUrl}`;
+
+            try {
+                const response = await axios.get(url);
+                const html = response.data;
+                const $ = cheerio.load(html);
+
+
+                const claimsData = [];
+
+                $('div.case-table table tbody tr').each((index, rowElement) => {
+
+                    const columns = $(rowElement).find('td');
+
+                    // Extract data from columns as needed
+                    const CorporateDebtor = $(columns[0]).text().trim();
+                    const Name_of_IRP_RP_Liquidator = $(columns[1]).text().trim();
+                    const Under_Process = $(columns[2]).text().trim();
+                    const Latest_Claim_As_On_Date = $(columns[3]).text().trim();
+                    const View_Details = $(columns[4]).text().trim();
+                    // Add more fields as needed
+
+                    claimsData.push({
+                        CorporateDebtor,
+                        Name_of_IRP_RP_Liquidator,
+                        Under_Process,
+                        Latest_Claim_As_On_Date,
+                        View_Details
+                        // Add more fields here
+                    });
+                });
+
+                return claimsData;
+            } catch (error) {
+                console.error('Error fetching web page:', error);
+                return [];
+            }
+        }
+
+        // Scrape data and filter for the requested page
+        const scrapedAnnouncements = await scrapeDataFromPage();
+
+        // Respond with the paginated announcements
+        res.status(200).json(scrapedAnnouncements);
+
+    } catch (error) {
+        console.error('An error occurred on the server side:', error);
+        res.status(500).json({ message: "An Error Occurred on the server side" });
+    }
+};
+
 
 export const resolution_plans = async (req, res) => {
     try {
@@ -890,7 +966,7 @@ export const other_courts = async (req, res) => {
 export const whats_new = async (req, res) => {
     try {
         const baseUrl = 'https://ibbi.gov.in/en';
-        const urlforpdf=`https://ibbi.gov.in`
+        const urlforpdf = `https://ibbi.gov.in`
 
         const requestedPage = req.query.page || 1; // Get the requested page number from query parameter
 
@@ -909,20 +985,20 @@ export const whats_new = async (req, res) => {
                     const date = $row.find('b').text(); // Extract the date
                     const pdfLink = $row.find('a').attr('href'); // Extract the PDF link
                     let text = $row.find('a').text().replace(/\s+/g, ' ').trim(); // Clean up and extract the text content
-        
+
                     // Remove the date from the text
                     text = text.replace(date, '').trim();
-        
+
                     // Create a clickable link
                     const clickablePdfLink = `${urlforpdf}${pdfLink}`;
-        
+
                     announcements.push({
                         date,
                         text,
                         pdfLink: clickablePdfLink,
                     });
                 });
-        
+
 
                 return announcements;
             } catch (error) {

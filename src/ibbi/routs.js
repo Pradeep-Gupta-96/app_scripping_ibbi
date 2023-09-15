@@ -15,6 +15,7 @@ import {
     resolution_plans,
     summary_of_outcomes,
     supreme_court,
+    viewclaims,
     whats_new
 } from "./controllers.js";
 
@@ -22,6 +23,7 @@ export const routes = express.Router()
 
 routes.get('/public_announcement', public_announcement)
 routes.get('/claims', claims)
+routes.get('/viewclaims/:id', viewclaims)
 routes.get('/resolution_plans', resolution_plans)
 routes.get('/auction_notices', auction_notices)
 routes.get('/orders', orders)
