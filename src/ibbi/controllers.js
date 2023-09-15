@@ -163,17 +163,45 @@ export const viewclaims = async (req, res) => {
                     const CorporateDebtor = $(columns[0]).text().trim();
                     const Name_of_IRP_RP_Liquidator = $(columns[1]).text().trim();
                     const Under_Process = $(columns[2]).text().trim();
-                    const Latest_Claim_As_On_Date = $(columns[3]).text().trim();
-                    const View_Details = $(columns[4]).text().trim();
-                    // Add more fields as needed
+
+                    const Latest_Claim_As_On_Date = $(columns[3]).find("input");
+                    const amount = Latest_Claim_As_On_Date.attr('value');
+
+                    const number_claims = $(columns[4]).find("input");
+                    const number_claims1=number_claims.attr("value")
+
+                    const claims_admitted = $(columns[5]).find("input");
+                    const claims_admitted1=claims_admitted.attr("value")
+
+                    const contiget_claims = $(columns[6]).find("input");
+                    const contiget_claims1=contiget_claims.attr("value")
+
+                    const climas_rejected = $(columns[7]).find("input");
+                    const climas_rejected1=climas_rejected.attr("value")
+
+                    const under_varification = $(columns[8]).find("input");
+                    const under_varification1=under_varification.attr("value")
+                    
+                    const annexure = $(columns[9]).find("a");
+                    const annexure1 = $(columns[9]).text().trim();
+                    const annexurehref=annexure.attr("href")
+
+                    const Remarks = $(columns[10]).text().trim();
 
                     claimsData.push({
                         CorporateDebtor,
                         Name_of_IRP_RP_Liquidator,
                         Under_Process,
-                        Latest_Claim_As_On_Date,
-                        View_Details
-                        // Add more fields here
+                        amount,
+                        number_claims1,
+                        claims_admitted1,
+                        contiget_claims1,
+                        climas_rejected1,
+                        under_varification1,
+                        annexure1,
+                        annexurehref,
+                        Remarks
+                        
                     });
                 });
 
