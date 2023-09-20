@@ -63,6 +63,7 @@ export const public_announcement = async (req, res) => {
     }
 };
 
+
 export const claims = async (req, res) => {
     try {
         const baseUrl = 'https://ibbi.gov.in/en/claims/claim-process';

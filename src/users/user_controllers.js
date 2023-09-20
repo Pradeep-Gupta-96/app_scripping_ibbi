@@ -61,7 +61,7 @@ export const signin = async (req, res) => {
 
         // Validate user input (e.g., check for required fields)
         if (!email || !password) {
-            return res.status(400).json({ message: "Please provide both email and password." });
+            return res.status(400).json({ message: "Invalid credentials." });
         }
 
         const result = await pool.query(query, [email]);
