@@ -28,7 +28,7 @@ export const inserttestimonials = async (req, res) => {
 export const getAlltestimonials = async (req, res) => {
     try {
         const result = await pool.query(getAlltestimonialsQuery);
-        res.status(200).json({ message: "Fetched all testimonialss", testimonialss: result.rows });
+        res.status(200).json({ message: "Fetched all testimonials", testimonials: result.rows });
     } catch (error) {
         res.status(500).json({ message: "An error occurred on the server side", error });
     }
